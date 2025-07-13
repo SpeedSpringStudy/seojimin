@@ -17,6 +17,10 @@ public class ProductService {
         return productRepository.findProducts();
     }
 
+    public Product getProduct(Long id){
+        return productRepository.findProduct(id);
+    }
+
     public Product addProduct(ProductRequest request){
         return productRepository.save(request.name(), request.price());
     }
