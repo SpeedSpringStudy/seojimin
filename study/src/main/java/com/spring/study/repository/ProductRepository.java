@@ -32,6 +32,12 @@ public class ProductRepository {
         return new ArrayList<>(products.values());
     }
 
+    // 상품 조회(개별)
+    public Product findProduct(Long id){
+        Product findProduct = products.get(id);
+        return new Product(findProduct.getId(), findProduct.getName(), findProduct.getPrice());
+    }
+
     // 상품 삭제
     public void delete(Long id){
         products.remove(id);

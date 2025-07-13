@@ -27,6 +27,11 @@ public class ProductController {
         return productService.getProducts();
     }
 
+    @GetMapping("{id}")
+    public Product getProduct(@PathVariable("id") Long id){
+        return productService.getProduct(id);
+    }
+
     // 상품 추가
     @PostMapping
     public Product addProduct(@RequestBody ProductRequest request){
