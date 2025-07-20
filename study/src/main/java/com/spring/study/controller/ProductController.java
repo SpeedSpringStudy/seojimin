@@ -3,6 +3,7 @@ package com.spring.study.controller;
 import com.spring.study.domain.dto.ProductRequest;
 import com.spring.study.domain.Product;
 import com.spring.study.service.ProductService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,13 +35,13 @@ public class ProductController {
 
     // 상품 추가
     @PostMapping
-    public Product addProduct(@RequestBody ProductRequest request){
+    public Product addProduct(@Valid @RequestBody ProductRequest request){
         return productService.addProduct(request);
     }
 
     // 상품 수정
     @PutMapping("{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest request){
+    public Product updateProduct(@PathVariable("id") Long id, @Valid @RequestBody ProductRequest request){
         return productService.updateProduct(id, request);
     }
 

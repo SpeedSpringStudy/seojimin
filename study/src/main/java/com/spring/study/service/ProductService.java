@@ -1,5 +1,7 @@
 package com.spring.study.service;
 
+import com.spring.study.common.exception.ErrorCode;
+import com.spring.study.common.exception.custonException.KakaoNameException;
 import com.spring.study.domain.dto.ProductRequest;
 import com.spring.study.domain.Product;
 import com.spring.study.repository.ProductRepository;
@@ -25,6 +27,9 @@ public class ProductService {
     }
 
     public Product addProduct(ProductRequest request){
+        if (request.name().contains("카카오")) {
+            throw new KakaoNameException(ErrorCode.KAKAO_NAME_CONTAIN);
+        }
         return productRepository.save(request.name(), request.price());
     }
 
