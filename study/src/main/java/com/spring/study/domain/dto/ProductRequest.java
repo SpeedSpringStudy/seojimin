@@ -1,5 +1,7 @@
 package com.spring.study.domain.dto;
 
+import com.spring.study.common.exception.ErrorCode;
+import com.spring.study.common.exception.custonException.KakaoNameException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,4 +17,12 @@ public record ProductRequest(
         @NotNull(message = "상품 이름은 필수입니다.")
         @Size(max = 15, message = "상품 이름은 공백 포함 최대 15자까지 입력 가능합니다.")
         @Pattern(regexp = "^[A-Za-z0-9()\\[\\]+\\-&/_ ]+$")
-        String name, int price) {}
+        String name,
+        int price
+) {
+        public ProductRequest {
+                if (name.contains("카카오")) {
+                        throw new KakaoNameException(ErrorCode.KAKAO_NAME_CONTAIN);
+                }
+        }
+}
