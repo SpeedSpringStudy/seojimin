@@ -1,6 +1,6 @@
 package com.spring.study.repository;
 
-import com.spring.study.domain.Product;
+import com.spring.study.domain.entity.Product;
 import java.util.List;
 
 public interface ProductRepository {

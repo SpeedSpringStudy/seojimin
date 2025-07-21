@@ -1,6 +1,6 @@
 package com.spring.study.controller;
 
-import com.spring.study.domain.Product;
+import com.spring.study.domain.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

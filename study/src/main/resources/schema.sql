@@ -8,3 +8,10 @@
 
 INSERT INTO product(name, price) VALUES ('product1', 10000);
 INSERT INTO product(name, price) VALUES ('product2', 20000);
+
+CREATE TABLE member (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    refreshToken VARCHAR(255)
+);

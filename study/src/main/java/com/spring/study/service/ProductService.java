@@ -1,10 +1,9 @@
 package com.spring.study.service;
 
-import com.spring.study.domain.dto.ProductRequest;
-import com.spring.study.domain.Product;
+import com.spring.study.domain.dto.request.ProductRequest;
+import com.spring.study.domain.entity.Product;
 import com.spring.study.repository.ProductRepository;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
