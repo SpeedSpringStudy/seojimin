@@ -1,4 +1,4 @@
-package com.spring.study.jwt;
+package com.spring.study.common.auth.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

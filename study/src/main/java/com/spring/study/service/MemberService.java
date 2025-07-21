@@ -3,11 +3,13 @@ package com.spring.study.service;
 import com.spring.study.domain.dto.request.memberRequest;
 import com.spring.study.domain.dto.response.LoginResponse;
 import com.spring.study.domain.entity.Member;
-import com.spring.study.jwt.JwtUtil;
-import com.spring.study.jwt.TokenTypes;
+import com.spring.study.common.auth.jwt.JwtUtil;
+import com.spring.study.common.auth.jwt.TokenTypes;
 import com.spring.study.repository.dao.MemberDao;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,7 @@ public class MemberService {
 
         // 헤더에 엑세스 토큰 추가
         response.addHeader("Authorization", "Bearer " + access);
+        response.addHeader(HttpHeaders.SET_COOKIE, createCookie(refresh).toString());
 
         // 리프레시 토큰 저장
         targetMember.setRefreshToken(refresh);
@@ -39,5 +42,15 @@ public class MemberService {
 
     public void signUp(memberRequest request) {
         memberDao.signUp(request.email(), request.password());
+    }
+
+    private ResponseCookie createCookie(String value) {
+        return ResponseCookie.from(TokenTypes.REFRESH.getType(), value)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("None")
+                .build();
     }
 }

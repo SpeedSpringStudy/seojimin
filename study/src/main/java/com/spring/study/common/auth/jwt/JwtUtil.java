@@ -1,5 +1,6 @@
-package com.spring.study.jwt;
+package com.spring.study.common.auth.jwt;
 
+import com.spring.study.common.auth.CustomUserDetailsService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import java.nio.charset.StandardCharsets;
@@ -8,6 +9,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -21,10 +25,43 @@ public class JwtUtil {
     private Long refreshTokenExpirationPeriod;
 
     private final SecretKey secretKey;
+    private final CustomUserDetailsService userDetailsService;
 
-    public JwtUtil(@Value("${jwt.secretKey}") String secret) {
+    public JwtUtil(@Value("${jwt.secretKey}") String secret, CustomUserDetailsService userDetailsService) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
                 SIG.HS256.key().build().getAlgorithm());
+        this.userDetailsService = userDetailsService;
+    }
+
+    // email 추출
+    public String getEmail(String token){
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        return Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("email", String.class);
+    }
+
+    // identity 추출
+    public Long getMemberIdentity(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        return Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("memberIdentity", Long.class);
+    }
+
+    // UserDetails 조회 및 Authentication 객체 생성
+    public Authentication getAuthentication(String email) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     // 토큰 검증(만료기간)
