@@ -1,7 +1,7 @@
 package com.spring.study.controller;
 
-import com.spring.study.domain.dto.ProductRequest;
-import com.spring.study.domain.Product;
+import com.spring.study.domain.dto.request.ProductRequest;
+import com.spring.study.domain.entity.Product;
 import com.spring.study.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;

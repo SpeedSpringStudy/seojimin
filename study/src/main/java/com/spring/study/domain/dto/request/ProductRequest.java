@@ -1,8 +1,7 @@
-package com.spring.study.domain.dto;
+package com.spring.study.domain.dto.request;
 
 import com.spring.study.common.exception.ErrorCode;
 import com.spring.study.common.exception.custonException.KakaoNameException;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

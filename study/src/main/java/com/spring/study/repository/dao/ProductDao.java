@@ -1,11 +1,10 @@
 package com.spring.study.repository.dao;
 
-import com.spring.study.domain.Product;
+import com.spring.study.domain.entity.Product;
 import com.spring.study.repository.ProductRepository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
