@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,6 +44,13 @@ public class MemberService {
 
     public void signUp(memberRequest request) {
         memberDao.signUp(request.email(), request.password());
+    }
+
+    public Member getMemberByAuthentication() {
+        // Authentication 에서 추출한 이메일로 사용자 조회
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String memberEmail = authentication.getName();
+        return memberDao.findByEmail(memberEmail);
     }
 
     private ResponseCookie createCookie(String value) {
