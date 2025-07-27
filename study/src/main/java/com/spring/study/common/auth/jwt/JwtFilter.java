@@ -1,8 +1,10 @@
 package com.spring.study.common.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.study.common.exception.ErrorCode;
+import com.spring.study.common.exception.custonException.NotFoundException;
 import com.spring.study.domain.entity.Member;
-import com.spring.study.repository.dao.MemberDao;
+import com.spring.study.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -27,7 +29,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -57,7 +59,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (refreshToken != null && !jwtUtil.isExpired(refreshToken)) {
                 String email = jwtUtil.getEmail(refreshToken);
-                Member member = memberDao.findByEmail(email);
+                Member member = memberRepository.findByEmail(email)
+                        .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
                 if (refreshToken.equals(member.getRefreshToken())) {
 
@@ -65,8 +68,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     String newAccessToken = jwtUtil.createJwt("access", email, member.getId());
                     String newRefreshToken = jwtUtil.createJwt("refresh", email, member.getId());
 
-                    // DB 업데이트
-                    memberDao.updateRefreshToken(member.getId(), newRefreshToken);
+                    member.updateRefreshToken(newRefreshToken);
 
                     // 헤더로 응답
                     response.setHeader("Authorization", "Bearer " + newAccessToken);

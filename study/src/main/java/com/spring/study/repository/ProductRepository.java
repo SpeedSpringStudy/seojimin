@@ -1,13 +1,8 @@
 package com.spring.study.repository;
 
 import com.spring.study.domain.entity.Product;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductRepository {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Product save(String name, int price);
-    Product update(Long id, String name, int price);
-    List<Product> findProducts();
-    Product findProduct(Long id);
-    void delete(Long id);
 }

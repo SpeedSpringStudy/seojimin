@@ -1,51 +1,67 @@
 package com.spring.study.service;
 
+import com.spring.study.common.exception.ErrorCode;
+import com.spring.study.common.exception.custonException.NotFoundException;
 import com.spring.study.domain.dto.request.AddWishRequest;
 import com.spring.study.domain.dto.request.DeleteWishRequest;
 import com.spring.study.domain.dto.response.WishesResponse;
 import com.spring.study.domain.entity.Member;
 import com.spring.study.domain.entity.Wish;
-import com.spring.study.repository.dao.WishDao;
+import com.spring.study.repository.WishRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class WishService {
 
-    private final WishDao wishDao;
+    private final WishRepository wishRepository;
     private final MemberService memberService;
+    private final ProductService productService;
 
     // 장바구니 조회
     public WishesResponse getWishes() {
         Member member = memberService.getMemberByAuthentication();
-        return new WishesResponse(wishDao.findWishes(member.getId()));
+        return WishesResponse.of(wishRepository.findAllByMember(member));
     }
 
     // 장바구니 상품 추가
-    public WishesResponse addWish(AddWishRequest request) {
+    @Transactional
+    public Wish addWish(AddWishRequest request) {
         Member member = memberService.getMemberByAuthentication();
-        List<Wish> wishes = wishDao.createWish(member.getId(), request.productId(), 1);
-        return new WishesResponse(wishes);
+
+        Wish newWish = Wish.builder()
+                .member(member)
+                .product(productService.getProduct(request.productId()))
+                .build();
+
+        return wishRepository.save(newWish);
     }
 
     // 장바구니 상품 제거
-    public WishesResponse deleteWish(DeleteWishRequest request) {
+    @Transactional
+    public void deleteWish(DeleteWishRequest request) {
         Member member = memberService.getMemberByAuthentication();
-        return new WishesResponse(wishDao.delete(request.wishId(), member.id));
+        wishRepository.deleteById(request.wishId());
     }
 
     // 장바구니 상품 수량 제어
-    public WishesResponse increaseQuantity(Long wishId) {
+    @Transactional
+    public void increaseQuantity(Long wishId) {
         Member member = memberService.getMemberByAuthentication();
-        Wish wish = wishDao.findWish(wishId);
-        return new WishesResponse(wishDao.updateQuantity(member.id, wish.getQuantity()+1, wishId));
+        Wish wish = wishRepository.findById(wishId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.WISH_NOT_FOUND));
+
+        wish.addQuantity();
     }
 
-    public WishesResponse decreaseQuantity(Long wishId) {
+    @Transactional
+    public void decreaseQuantity(Long wishId) {
         Member member = memberService.getMemberByAuthentication();
-        Wish wish = wishDao.findWish(wishId);
-        return new WishesResponse(wishDao.updateQuantity(member.id, wish.getQuantity()-1, wishId));
+        Wish wish = wishRepository.findById(wishId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.WISH_NOT_FOUND));
+        wish.minusQuantity();
     }
 }

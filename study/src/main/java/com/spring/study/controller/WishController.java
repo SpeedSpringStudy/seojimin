@@ -3,6 +3,7 @@ package com.spring.study.controller;
 import com.spring.study.domain.dto.request.AddWishRequest;
 import com.spring.study.domain.dto.request.DeleteWishRequest;
 import com.spring.study.domain.dto.response.WishesResponse;
+import com.spring.study.domain.entity.Wish;
 import com.spring.study.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,24 +33,24 @@ public class WishController {
 
     // 장바구니 상품 추가
     @PostMapping
-    public ResponseEntity<WishesResponse> addWish(@RequestBody AddWishRequest request){
+    public ResponseEntity<Wish> addWish(@RequestBody AddWishRequest request){
         return new ResponseEntity<>(wishService.addWish(request), HttpStatus.CREATED);
     }
 
     // 장바구니 상품 제거
     @DeleteMapping
-    public ResponseEntity<WishesResponse> deleteWish(@RequestBody DeleteWishRequest request){
-        return new ResponseEntity<>(wishService.deleteWish(request), HttpStatus.OK);
+    public ResponseEntity<Void> deleteWish(@RequestBody DeleteWishRequest request){
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 장바구니 상품 수량 제어
     @PatchMapping("/{wishId}/increase")
-    public ResponseEntity<WishesResponse> increaseQuantity(@PathVariable("wishId") Long wishId) {
-        return new ResponseEntity<>(wishService.increaseQuantity(wishId), HttpStatus.OK);
+    public ResponseEntity<Void> increaseQuantity(@PathVariable("wishId") Long wishId) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/{wishId}/decrease")
-    public ResponseEntity<WishesResponse> decreaseQuantity(@PathVariable("wishId") Long wishId) {
-        return new ResponseEntity<>(wishService.decreaseQuantity(wishId), HttpStatus.OK);
+    public ResponseEntity<Void> decreaseQuantity(@PathVariable("wishId") Long wishId) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
