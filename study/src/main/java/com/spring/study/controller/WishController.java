@@ -7,6 +7,9 @@ import com.spring.study.domain.entity.Wish;
 import com.spring.study.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -27,19 +31,23 @@ public class WishController {
 
     // 장바구니 조회
     @GetMapping
-    public ResponseEntity<WishesResponse> getWishes(){
-        return new ResponseEntity<>(wishService.getWishes(), HttpStatus.OK);
+    public ResponseEntity<WishesResponse> getWishes(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        return new ResponseEntity<>(wishService.getWishes(pageable), HttpStatus.OK);
     }
 
     // 장바구니 상품 추가
     @PostMapping
-    public ResponseEntity<Wish> addWish(@RequestBody AddWishRequest request){
+    public ResponseEntity<Wish> addWish(@RequestBody AddWishRequest request) {
         return new ResponseEntity<>(wishService.addWish(request), HttpStatus.CREATED);
     }
 
     // 장바구니 상품 제거
     @DeleteMapping
-    public ResponseEntity<Void> deleteWish(@RequestBody DeleteWishRequest request){
+    public ResponseEntity<Void> deleteWish(@RequestBody DeleteWishRequest request) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

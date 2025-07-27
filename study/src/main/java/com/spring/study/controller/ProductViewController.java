@@ -1,7 +1,14 @@
 package com.spring.study.controller;
 
+import com.spring.study.domain.dto.response.ProductResponse;
 import com.spring.study.domain.entity.Product;
+import com.spring.study.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/products")
 public class ProductViewController {
 
-    private final ProductController pc;
+    private final ProductController productController;
+    private final ProductService productService;
 
     @GetMapping
-    public String productList(Model model){
-        model.addAttribute("products",pc.getProducts());
+    public String productList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                              Model model) {
+        Page<ProductResponse> products = productService.getProducts(pageable);
+        model.addAttribute("products", products);
         return "products";
     }
 
@@ -28,10 +38,7 @@ public class ProductViewController {
 
     @GetMapping("/edit/{id}")
     public String editProductFrom(@PathVariable("id") Long id, Model model){
-        Product product = pc.getProducts().stream()
-                .filter(p -> p.id.equals(id))
-                .findFirst()
-                .orElse(null);
+        Product product = productService.getProduct(id);
         if (product != null) {
             model.addAttribute("product", product);
             return "product_edit_form";

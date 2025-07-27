@@ -3,10 +3,15 @@ package com.spring.study.service;
 import com.spring.study.common.exception.ErrorCode;
 import com.spring.study.common.exception.custonException.NotFoundException;
 import com.spring.study.domain.dto.request.ProductRequest;
+import com.spring.study.domain.dto.response.ProductResponse;
 import com.spring.study.domain.entity.Product;
 import com.spring.study.repository.ProductRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +21,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public List<Product> getProducts(){
-        return productRepository.findAll();
+    public Page<ProductResponse> getProducts(Pageable pageable){
+        return productRepository.findAll(pageable).map(ProductResponse::from);
     }
 
     public Product getProduct(Long id){

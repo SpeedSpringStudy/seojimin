@@ -2,14 +2,13 @@ package com.spring.study.domain.dto.response;
 
 import com.spring.study.domain.entity.Wish;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
-public record WishesResponse (List<WishDetailResponse> wishes) {
+public record WishesResponse (Page<WishDetailResponse> wishes) {
 
-    public static WishesResponse of(List<Wish> wishes){
+    public static WishesResponse of(Page<Wish> wishes){
 
-        List<WishDetailResponse> wishDetailResponses = wishes.stream()
-                .map(WishDetailResponse::from)
-                .toList();
+        Page<WishDetailResponse> wishDetailResponses = wishes.map(WishDetailResponse::from);
 
         return new WishesResponse(wishDetailResponses);
     }

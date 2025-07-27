@@ -10,6 +10,7 @@ import com.spring.study.domain.entity.Wish;
 import com.spring.study.repository.WishRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +23,9 @@ public class WishService {
     private final ProductService productService;
 
     // 장바구니 조회
-    public WishesResponse getWishes() {
+    public WishesResponse getWishes(Pageable pageable) {
         Member member = memberService.getMemberByAuthentication();
-        return WishesResponse.of(wishRepository.findAllByMember(member));
+        return WishesResponse.of(wishRepository.findAllByMember(member, pageable));
     }
 
     // 장바구니 상품 추가
