@@ -15,3 +15,12 @@ CREATE TABLE member (
     password VARCHAR(255) NOT NULL,
     refreshToken VARCHAR(255)
 );
+
+CREATE TABLE wish (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    memberId BIGINT NOT NULL,
+    productId BIGINT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
