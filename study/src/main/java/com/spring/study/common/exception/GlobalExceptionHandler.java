@@ -1,6 +1,7 @@
 package com.spring.study.common.exception;
 
 import com.spring.study.common.exception.custonException.KakaoNameException;
+import com.spring.study.common.exception.custonException.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(KakaoNameException.class)
     public ResponseEntity<ErrorResponse> handleKakaoNameExceptions(KakaoNameException e) {
+        final ErrorCode errorCode = e.getErrorCode();
+        final ErrorResponse response = makeErrorResponse(errorCode);
+        return ResponseEntity.status(errorCode.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(NotFoundException e) {
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse response = makeErrorResponse(errorCode);
         return ResponseEntity.status(errorCode.getStatus()).body(response);
