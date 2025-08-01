@@ -5,52 +5,50 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            margin: 40px;
             background-color: #f5f5f5;
         }
         .container {
-            width: 80%;
-            max-width: 800px;
+            max-width: 900px;
+            margin: 0 auto;
             background: white;
-            padding: 20px;
+            padding: 20px 30px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
         h1 {
-            flex: 1;
             text-align: center;
-            font-size: 24px;
+            margin-bottom: 20px;
             color: #333;
-            margin: 0;
+        }
+        .add-button {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .add-button a {
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
         th, td {
-            padding: 12px;
+            border: 1px solid #ddd;
+            padding: 12px 15px;
             text-align: left;
         }
         th {
             background-color: #f2f2f2;
         }
-        td img {
-            max-width: 100px;
-            height: auto;
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
         }
         .actions {
             text-align: center;
@@ -59,82 +57,89 @@
             margin: 0 5px;
             padding: 6px 12px;
             border: none;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
             border-radius: 4px;
             cursor: pointer;
-        }
-        .actions button {
-            background-color: #dc3545;
-        }
-        .add-button a {
-            padding: 10px 20px;
-            background-color: #28a745;
             color: white;
             text-decoration: none;
+        }
+        .actions a.edit {
+            background-color: #007bff;
+        }
+        .actions button.delete {
+            background-color: #dc3545;
+        }
+        .pagination {
+            text-align: center;
+        }
+        .pagination a {
+            margin: 0 5px;
+            text-decoration: none;
+            padding: 6px 12px;
+            color: #007bff;
+            border: 1px solid #ddd;
             border-radius: 4px;
+        }
+        .pagination a.disabled {
+            color: #aaa;
+            pointer-events: none;
+            border-color: #eee;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <h1>상품 목록</h1>
-        <div class="add-button">
-            <a href="/products/add">상품 추가</a>
-        </div>
+    <h1>상품 목록</h1>
+
+    <div class="add-button">
+        <a href="/products/add">상품 추가</a>
     </div>
+
     <table>
         <thead>
         <tr>
             <th>ID</th>
             <th>이름</th>
             <th>가격</th>
+            <th>카테고리명</th>
+            <th>카테고리 색상</th>
             <th>수정</th>
             <th>삭제</th>
         </tr>
         </thead>
-        <tbody id="productTableBody">
-        <!-- 상품 목록이 여기에 동적으로 추가됩니다. -->
+        <tbody>
+        <tr th:each="product : ${products.content}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price} + '원'"></td>
+            <td th:text="${product.category.name}"></td>
+            <td>
+                <div class="color-box" th:style="'background-color:' + ${product.category.color}"></div>
+            </td>
+            <td class="actions">
+                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="edit">수정</a>
+            </td>
+            <td class="actions">
+                <form th:onsubmit="|return confirm('상품을 삭제하시겠습니까?');|"
+                      th:action="@{/api/products/{id}(id=${product.id})}" method="post">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="delete">삭제</button>
+                </form>
+            </td>
+        </tr>
         </tbody>
     </table>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('/api/products')
-            .then(response => response.json())
-            .then(data => {
-                const productTableBody = document.getElementById("productTableBody");
-                productTableBody.innerHTML = "";
-                data.forEach(product => {
-                    productTableBody.innerHTML += `
-                            <tr>
-                                <td>${product.id}</td>
-                                <td>${product.name}</td>
-                                <td>${product.price}</td>
-                                <td class="actions"><a href="/products/edit/${product.id}">수정</a></td>
-                                <td class="actions">
-                                    <form onsubmit="event.preventDefault(); deleteProduct(${product.id});">
-                                        <button type="submit">삭제</button>
-                                    </form>
-                                </td>
-                            </tr>`;
-                });
-            });
-    });
 
-    function deleteProduct(id) {
-        fetch(`/api/products/${id}`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    alert('상품이 삭제되었습니다.');
-                    location.reload();
-                } else {
-                    alert('상품 삭제에 실패했습니다.');
-                }
-            });
-    }
-</script>
+    <div class="pagination">
+        <a th:if="${products.hasPrevious()}"
+           th:href="@{/products(page=${products.number - 1}, size=${products.size})}">이전</a>
+        <a th:unless="${products.hasPrevious()}" class="disabled">이전</a>
+
+        <span>현재 페이지: <span th:text="${products.number + 1}"></span> / <span th:text="${products.totalPages}"></span></span>
+
+        <a th:if="${products.hasNext()}"
+           th:href="@{/products(page=${products.number + 1}, size=${products.size})}">다음</a>
+        <a th:unless="${products.hasNext()}" class="disabled">다음</a>
+    </div>
+</div>
 </body>
 </html>

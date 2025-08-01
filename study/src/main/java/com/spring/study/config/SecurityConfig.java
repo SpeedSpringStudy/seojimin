@@ -49,7 +49,9 @@ public class SecurityConfig {
                         // 바로 인가해주는 경로
                         .requestMatchers(
                                 "/api/members/signup",
-                                "/api/members/login"
+                                "/api/members/login",
+                                "/api/products",
+                                "/products"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

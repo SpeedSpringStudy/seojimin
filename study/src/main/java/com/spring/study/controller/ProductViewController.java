@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class ProductViewController {
     private final ProductService productService;
 
     @GetMapping
-    public String productList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+    public String productList(@PageableDefault(size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
                               Model model) {
         Page<ProductResponse> products = productService.getProducts(pageable);
         model.addAttribute("products", products);

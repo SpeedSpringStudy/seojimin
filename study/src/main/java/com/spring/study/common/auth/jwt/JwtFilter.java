@@ -147,7 +147,9 @@ public class JwtFilter extends OncePerRequestFilter {
     private boolean isExcludedPath(AntPathMatcher pathMatcher, String requestURI) {
 
         return pathMatcher.match("/api/members/login", requestURI)
-                || pathMatcher.match("/api/members/signup", requestURI);
+                || pathMatcher.match("/api/members/signup", requestURI)
+                || pathMatcher.match("/products", requestURI)
+                || pathMatcher.match("/api/products", requestURI);
 
     }
 }
