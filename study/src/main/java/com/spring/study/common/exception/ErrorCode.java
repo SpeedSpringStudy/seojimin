@@ -21,7 +21,10 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "M001" ,"요청 사용자를 찾을 수 없습니다." ),
 
     // Wish
-    WISH_NOT_FOUND(404, "W001" , "선택한 Wish를 찾을 수 없습니다.");
+    WISH_NOT_FOUND(404, "W001" , "선택한 Wish를 찾을 수 없습니다."),
+
+    // Category
+    CATEGORY_NOT_FOUND(404, "C001" ,"해당 카테고리를 찾을 수 없습니다." );
     private final int status;
     private final String code;
     private final String message;
