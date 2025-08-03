@@ -24,7 +24,14 @@ public enum ErrorCode {
     WISH_NOT_FOUND(404, "W001" , "선택한 Wish를 찾을 수 없습니다."),
 
     // Category
-    CATEGORY_NOT_FOUND(404, "C001" ,"해당 카테고리를 찾을 수 없습니다." );
+    CATEGORY_NOT_FOUND(404, "C001" ,"해당 카테고리를 찾을 수 없습니다." ),
+
+    // Option
+    OPTION_NOT_FOUND(404, "O001", "해당 옵션을 찾을 수 없습니다."),
+
+    // ProductOption
+    PRODUCT_OPTION_NOT_FOUND(404, "PO001", "해당 상품 옵션을 찾을 수 없습니다." )
+    ;
     private final int status;
     private final String code;
     private final String message;

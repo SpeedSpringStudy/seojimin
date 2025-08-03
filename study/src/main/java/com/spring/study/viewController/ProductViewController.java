@@ -1,13 +1,12 @@
-package com.spring.study.controller;
+package com.spring.study.viewController;
 
+import com.spring.study.controller.ProductController;
 import com.spring.study.domain.dto.response.ProductResponse;
 import com.spring.study.domain.entity.Product;
 import com.spring.study.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;

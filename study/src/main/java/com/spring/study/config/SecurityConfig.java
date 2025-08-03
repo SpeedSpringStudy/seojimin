@@ -51,7 +51,11 @@ public class SecurityConfig {
                                 "/api/members/signup",
                                 "/api/members/login",
                                 "/api/products",
-                                "/products"
+                                "/products/*",
+                                "/products/**",
+                                "/products",
+                                "/login",
+                                "/signup"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
