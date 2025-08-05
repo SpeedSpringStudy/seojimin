@@ -24,3 +24,7 @@ INSERT INTO product (id, name, price, category) VALUES
 (8, '카카오프렌즈 무드등', 22000, 11),
 (9, '아이 깨끗해 유아 핸드솝', 6900, 9),
 (10, '애플 에어팟 프로 2세대', 359000, 10);
+
+INSERT INTO option (option_name) VALUES ('사이즈 S');
+INSERT INTO option (option_name) VALUES ('사이즈 M');
+INSERT INTO option (option_name) VALUES ('사이즈 L');
