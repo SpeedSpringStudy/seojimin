@@ -30,8 +30,8 @@ public enum ErrorCode {
     OPTION_NOT_FOUND(404, "O001", "해당 옵션을 찾을 수 없습니다."),
 
     // ProductOption
-    PRODUCT_OPTION_NOT_FOUND(404, "PO001", "해당 상품 옵션을 찾을 수 없습니다." )
-    ;
+    PRODUCT_OPTION_NOT_FOUND(404, "PO001", "해당 상품 옵션을 찾을 수 없습니다." ),
+    QUANTITY_OVER(400,"PO002" ,"현재 상품 수량보다 차감 수량이 많습니다." );
     private final int status;
     private final String code;
     private final String message;

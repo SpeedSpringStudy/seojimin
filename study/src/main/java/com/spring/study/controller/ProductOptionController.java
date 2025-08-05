@@ -1,6 +1,5 @@
 package com.spring.study.controller;
 
-import com.spring.study.domain.dto.request.OptionUpdateRequest;
 import com.spring.study.domain.dto.request.ProductOptionCreateRequest;
 import com.spring.study.domain.dto.request.ProductOptionUpdateRequest;
 import com.spring.study.domain.dto.response.ProductOptionDetailResponse;
@@ -51,7 +50,17 @@ public class ProductOptionController {
     @DeleteMapping("/{productOptionId}")
     public ResponseEntity<Void> deleteProductOption(
             @PathVariable("productOptionId") Long productOptionId){
-        productOptionService.deleteProdcutOption(productOptionId);
+        productOptionService.deleteProductOption(productOptionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 상품 수량 차감
+    @PostMapping("/{productOptionId}")
+    public ResponseEntity<Void> decreaseProductOption(
+            @PathVariable("productOptionId") Long productOptionId,
+            @RequestBody int quantity
+            ){
+        productOptionService.decreaseProductOptionQuantity(productOptionId, quantity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
