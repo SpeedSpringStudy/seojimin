@@ -152,7 +152,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 || pathMatcher.match("/products/**", requestURI)
                 || pathMatcher.match("/login", requestURI)
                 || pathMatcher.match("/signup", requestURI)
-                || pathMatcher.match("/api/products", requestURI);
+                || pathMatcher.match("/api/products", requestURI)
+                || pathMatcher.match("/oauth/*", requestURI)
+                || pathMatcher.match("/oauth/**", requestURI)
+                || pathMatcher.match("/oauth", requestURI);
 
     }
 }
