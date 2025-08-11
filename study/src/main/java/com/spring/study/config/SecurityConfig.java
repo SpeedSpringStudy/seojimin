@@ -55,7 +55,10 @@ public class SecurityConfig {
                                 "/products/**",
                                 "/products",
                                 "/login",
-                                "/signup"
+                                "/signup",
+                                "/oauth",
+                                "/oauth/*",
+                                "/oauth/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
